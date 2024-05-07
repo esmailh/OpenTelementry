@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using OpenTelemetry.Trace;
 
 namespace SampleOpenTelementry
@@ -8,10 +8,12 @@ namespace SampleOpenTelementry
     public class WeatherForeCastController : Controller
     {
         private readonly Tracer _tracer;
+        private readonly ILogger<WeatherForeCastController> _logger;
 
-        public WeatherForeCastController(Tracer tracer)
+        public WeatherForeCastController(Tracer tracer, ILogger<WeatherForeCastController> logger)
         {
             _tracer = tracer;
+            _logger = logger;
         }
 
         [HttpGet("weather")]
@@ -36,7 +38,7 @@ namespace SampleOpenTelementry
             .ToArray();
             span?.SetStatus(Status.Error);
             span?.AddEvent(new ($"Received Http request from {Request.Headers.UserAgent}"));
-
+            _logger.LogError("Test error");
             return Ok(forecast);
         }
     }
