@@ -1,0 +1,6 @@
+@SampleOpenTelementry_HostAddress = http://localhost:5082
+
+GET {{SampleOpenTelementry_HostAddress}}api/SampleOpenTelementry/v1/weatherforecast/
+Accept: application/json
+
+###
