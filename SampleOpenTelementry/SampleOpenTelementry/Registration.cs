@@ -1,4 +1,5 @@
-﻿using OpenTelemetry.Metrics;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Configuration;
@@ -8,7 +9,7 @@ namespace SampleOpenTelementry
 {
     public static class Registration
     {
-        public static void AddTelementryRequirement(this IServiceCollection services, IConfiguration configuration)
+        public static void AddTelementryRequirement(this IServiceCollection services,WebApplicationBuilder builder, IConfiguration configuration)
         {
             var resource = ResourceBuilder.CreateDefault().AddService(serviceName:AppSource, serviceVersion: AppSourceVersion);
             Console.WriteLine(configuration.GetSection("tracing:jaeger:url").Value);
@@ -33,6 +34,18 @@ namespace SampleOpenTelementry
                      .AddHttpClientInstrumentation()
                      .SetSampler(new AlwaysOnSampler());
             });
+
+            builder.Logging.AddOpenTelemetry(logging =>
+            {
+                logging.SetResourceBuilder(resource);
+                logging.AddConsoleExporter();
+                logging.AddProcessor(new LogProcessor());
+                logging.IncludeFormattedMessage = true;
+                logging.ParseStateValues= true;
+            });
+
+            builder.Logging.AddFilter<OpenTelemetryLoggerProvider>("*", LogLevel.Information);
+
         }
         public static void ConfigureServices(this IServiceCollection services)
         {
