@@ -2,7 +2,6 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using System.Configuration;
 using static SampleOpenTelementry.TelementryConstants;
 
 namespace SampleOpenTelementry
@@ -12,7 +11,6 @@ namespace SampleOpenTelementry
         public static void AddTelementryRequirement(this IServiceCollection services,WebApplicationBuilder builder, IConfiguration configuration)
         {
             var resource = ResourceBuilder.CreateDefault().AddService(serviceName:AppSource, serviceVersion: AppSourceVersion);
-            Console.WriteLine(configuration.GetSection("tracing:jaeger:url").Value);
             services.AddOpenTelemetry().WithMetrics(metric =>
             {
                 metric.SetResourceBuilder(resource)
@@ -32,6 +30,7 @@ namespace SampleOpenTelementry
                      })
                      .AddAspNetCoreInstrumentation()
                      .AddHttpClientInstrumentation()
+                     .AddRedisInstrumentation()
                      .SetSampler(new AlwaysOnSampler());
             });
 
