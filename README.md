@@ -26,4 +26,7 @@ exec this command and run docker compose
 ```http
  http://localhost:16686/
 ```
+```http
+https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry.Api/README.md
+```
 
